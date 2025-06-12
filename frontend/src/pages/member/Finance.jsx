@@ -16,7 +16,8 @@ import {
   Form,
   Progress,
   Select,
-  Typography
+  Typography,
+  InputNumber
 } from 'antd';
 import {
   DollarOutlined,
@@ -334,7 +335,7 @@ const MemberFinance = () => {
               columns={contributionColumns}
               dataSource={contributions}
               loading={loading}
-              rowKey="_id"
+              pagination={{ pageSize: 10 }}
             />
           </Card>
         </TabPane>
@@ -357,7 +358,7 @@ const MemberFinance = () => {
               columns={loanColumns}
               dataSource={loans}
               loading={loading}
-              rowKey="_id"
+              pagination={{ pageSize: 10 }}
             />
           </Card>
         </TabPane>
@@ -431,28 +432,61 @@ const MemberFinance = () => {
           <Form.Item
             name="amount"
             label="Loan Amount (KES)"
-            rules={[{ required: true }]}
+            rules={[
+              { required: true, message: 'Please enter loan amount' },
+              { type: 'number', min: 1000, message: 'Minimum loan amount is KES 1,000' }
+            ]}
           >
-            <Input type="number" prefix="KES" />
+            <InputNumber
+              style={{ width: '100%' }}
+              formatter={value => `KES ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+              parser={value => value.replace(/\KES\s?|(,*)/g, '')}
+              placeholder="Enter loan amount"
+            />
           </Form.Item>
+
           <Form.Item
-            name="description"
+            name="purpose"
             label="Purpose"
-            rules={[{ required: true }]}
+            rules={[{ required: true, message: 'Please enter loan purpose' }]}
           >
-            <Input.TextArea />
+            <Input.TextArea rows={4} placeholder="Describe the purpose of the loan" />
           </Form.Item>
+
           <Form.Item
-            name="term"
-            label="Term (months)"
-            rules={[{ required: true }]}
+            name="duration"
+            label="Duration (months)"
+            rules={[
+              { required: true, message: 'Please enter loan duration' },
+              { type: 'number', min: 1, max: 12, message: 'Duration must be between 1 and 12 months' }
+            ]}
           >
-            <Input type="number" />
+            <InputNumber min={1} max={12} style={{ width: '100%' }} />
           </Form.Item>
+
+          <Form.Item
+            name="guarantors"
+            label="Guarantors"
+            rules={[{ required: true, message: 'Please select at least one guarantor' }]}
+          >
+            <Select
+              mode="multiple"
+              placeholder="Select guarantors"
+              style={{ width: '100%' }}
+            >
+              {/* Add member options dynamically */}
+            </Select>
+          </Form.Item>
+
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Submit Application
-            </Button>
+            <Space>
+              <Button type="primary" htmlType="submit">
+                Submit Application
+              </Button>
+              <Button onClick={() => setLoanModalVisible(false)}>
+                Cancel
+              </Button>
+            </Space>
           </Form.Item>
         </Form>
       </Modal>

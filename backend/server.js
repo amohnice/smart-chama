@@ -33,6 +33,8 @@ const dashboardRoutes = require('./routes/dashboard');
 const adminRoutes = require('./routes/admin');
 const documentRoutes = require('./routes/documents');
 const settingsRoutes = require('./routes/settings');
+const loanRoutes = require('./routes/loanRoutes');
+const contributionRoutes = require('./routes/contributionRoutes');
 
 // Create Express app
 const app = express();
@@ -79,6 +81,8 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/loans', loanRoutes);
+app.use('/api/contributions', contributionRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {

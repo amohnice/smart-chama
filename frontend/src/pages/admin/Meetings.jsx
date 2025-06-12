@@ -3,6 +3,7 @@ import { Card, Table, Button, Space, Tag, message, Modal, Form, Input, DatePicke
 import { PlusOutlined, EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { meetingService } from '../../services/api';
+import moment from 'moment';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -41,7 +42,7 @@ const AdminMeetings = () => {
     setSelectedMeeting(meeting);
     form.setFieldsValue({
       title: meeting.title,
-      date: meeting.date,
+      date: moment(meeting.date),
       time: meeting.time,
       location: meeting.location,
       type: meeting.type,
@@ -62,11 +63,16 @@ const AdminMeetings = () => {
 
   const handleSubmit = async (values) => {
     try {
+      const formattedValues = {
+        ...values,
+        date: values.date.format('YYYY-MM-DD'),
+      };
+
       if (selectedMeeting) {
-        await meetingService.updateMeeting(selectedMeeting.id, values);
+        await meetingService.updateMeeting(selectedMeeting._id || selectedMeeting.id, formattedValues);
         message.success('Meeting updated successfully');
       } else {
-        await meetingService.createMeeting(values);
+        await meetingService.createMeeting(formattedValues);
         message.success('Meeting created successfully');
       }
       setModalVisible(false);
@@ -86,7 +92,7 @@ const AdminMeetings = () => {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
-      render: (date) => new Date(date).toLocaleDateString(),
+      render: (date) => moment(date).format('MMMM D, YYYY'),
     },
     {
       title: 'Time',
@@ -104,7 +110,7 @@ const AdminMeetings = () => {
       key: 'type',
       render: (type) => (
         <Tag color={
-          type === 'regular' ? 'blue' :
+          type === 'general' ? 'blue' :
           type === 'emergency' ? 'red' :
           type === 'annual' ? 'green' : 'default'
         }>
@@ -141,7 +147,7 @@ const AdminMeetings = () => {
           <Button
             danger
             icon={<DeleteOutlined />}
-            onClick={() => handleDeleteMeeting(record.id)}
+            onClick={() => handleDeleteMeeting(record._id || record.id)}
           >
             Delete
           </Button>
@@ -196,7 +202,7 @@ const AdminMeetings = () => {
             label="Date"
             rules={[{ required: true, message: 'Please select meeting date' }]}
           >
-            <DatePicker style={{ width: '100%' }} />
+            <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
           </Form.Item>
 
           <Form.Item
@@ -221,7 +227,7 @@ const AdminMeetings = () => {
             rules={[{ required: true, message: 'Please select meeting type' }]}
           >
             <Select placeholder="Select meeting type">
-              <Option value="regular">Regular</Option>
+              <Option value="general">General</Option>
               <Option value="emergency">Emergency</Option>
               <Option value="annual">Annual</Option>
             </Select>
@@ -230,6 +236,7 @@ const AdminMeetings = () => {
           <Form.Item
             name="description"
             label="Description"
+            rules={[{ required: true, message: 'Please enter meeting description' }]}
           >
             <TextArea rows={4} placeholder="Enter meeting description" />
           </Form.Item>
