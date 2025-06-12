@@ -14,6 +14,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -25,6 +27,29 @@ const Register = () => {
   const dispatch = useDispatch();
   const { isLoading, error } = useSelector((state) => state.auth);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    firstName: Yup.string().required('First name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    phone: Yup.string()
+      .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
+      .required('Phone number is required'),
+    password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    adminCode: Yup.string().when([], {
+      is: () => isAdmin,
+      then: () => Yup.string().required('Admin code is required'),
+      otherwise: () => Yup.string(),
+    }),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -34,23 +59,9 @@ const Register = () => {
       phone: '',
       password: '',
       confirmPassword: '',
+      adminCode: '',
     },
-    validationSchema: Yup.object({
-      firstName: Yup.string().required('First name is required'),
-      lastName: Yup.string().required('Last name is required'),
-      email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-      phone: Yup.string()
-        .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits')
-        .required('Phone number is required'),
-      password: Yup.string()
-        .min(8, 'Password must be at least 8 characters')
-        .required('Password is required'),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match')
-        .required('Confirm password is required'),
-    }),
+    validationSchema,
     onSubmit: async (values) => {
       try {
         const { confirmPassword, ...registrationData } = values;
@@ -191,6 +202,34 @@ const Register = () => {
                   helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
                 />
               </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={isAdmin}
+                      onChange={(e) => setIsAdmin(e.target.checked)}
+                      name="isAdmin"
+                    />
+                  }
+                  label="Register as Admin"
+                />
+              </Grid>
+              {isAdmin && (
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="adminCode"
+                    label="Admin Code"
+                    type="password"
+                    id="adminCode"
+                    value={formik.values.adminCode}
+                    onChange={formik.handleChange}
+                    error={formik.touched.adminCode && Boolean(formik.errors.adminCode)}
+                    helperText={formik.touched.adminCode && formik.errors.adminCode}
+                  />
+                </Grid>
+              )}
             </Grid>
             <Button
               type="submit"
@@ -221,8 +260,9 @@ const Register = () => {
         </DialogTitle>
         <DialogContent>
           <Typography>
-            Your account has been created successfully. Please note that your account is pending approval by an administrator.
-            You will receive an email notification once your account has been approved.
+            {isAdmin 
+              ? 'Your admin account has been created successfully. You can now log in to access your Smart Chama admin account.'
+              : 'Your account has been created successfully. Please note that your account is pending approval by an administrator. You will receive an email notification once your account has been approved.'}
           </Typography>
           <Typography sx={{ mt: 2 }}>
             You can then log in to access your Smart Chama account.

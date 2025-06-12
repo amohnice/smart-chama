@@ -1,64 +1,43 @@
 # Smart Chama Frontend
 
-A modern web application for managing Chama groups, built with React and Material-UI.
-
-## Features
-
-- User authentication and authorization
-- Member management
-- Meeting scheduling and attendance tracking
-- Financial management (contributions, loans, expenses)
-- Real-time notifications
-- Responsive design for all devices
-- Interactive dashboards and reports
-- File uploads and document management
+This is the frontend application for Smart Chama, built with React and Vite.
 
 ## Tech Stack
 
-- React 18
-- Redux Toolkit for state management
+- React.js with Vite
+- Material-UI for UI components
 - React Router for navigation
-- Material-UI for components and styling
-- Formik and Yup for form handling and validation
 - Axios for API requests
-- Recharts for data visualization
-- React Toastify for notifications
+- Redux Toolkit for state management
+- Formik & Yup for form handling and validation
 
-## Prerequisites
+## Getting Started
+
+### Prerequisites
 
 - Node.js (v14 or higher)
 - npm or yarn
-- Backend API running (see backend README)
 
-## Installation
+### Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/smart-chama.git
-   cd smart-chama/frontend
-   ```
+1. Install dependencies:
+```bash
+npm install
+```
 
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+2. Set up environment variables:
 
-3. Create a `.env` file in the root directory and add the following variables:
-   ```
-   VITE_API_URL=http://localhost:5000/api
-   VITE_APP_NAME=Smart Chama
-   ```
+Create a `.env` file in the root directory:
+```env
+VITE_API_URL=http://localhost:5000/api
+```
 
-4. Start the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+3. Start the development server:
+```bash
+npm run dev
+```
 
-The application will be available at `http://localhost:5173`.
+The application will be available at `http://localhost:5173`
 
 ## Available Scripts
 
@@ -66,30 +45,43 @@ The application will be available at `http://localhost:5173`.
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint
-- `npm run test` - Run tests
 - `npm run format` - Format code with Prettier
 
 ## Project Structure
 
 ```
-src/
-  ├── components/     # Reusable UI components
-  ├── features/       # Redux slices and related logic
-  ├── pages/         # Page components
-  ├── services/      # API services
-  ├── styles/        # Global styles and theme
-  ├── utils/         # Utility functions
-  ├── hooks/         # Custom React hooks
-  ├── assets/        # Static assets
-  ├── App.jsx        # Main App component
-  └── main.jsx       # Application entry point
+frontend/
+├── public/              # Static files
+├── src/
+│   ├── components/      # Reusable components
+│   ├── features/        # Redux slices and features
+│   ├── pages/          # Page components
+│   ├── services/       # API services
+│   ├── utils/          # Utility functions
+│   ├── App.jsx         # Root component
+│   └── main.jsx        # Entry point
+├── .env                # Environment variables
+├── package.json        # Dependencies and scripts
+└── vite.config.js      # Vite configuration
 ```
+
+## Features
+
+- User authentication (login/register)
+- Admin and member dashboards
+- Contribution management
+- Loan management
+- Meeting management
+- Profile management
+- Responsive design
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Create a new branch for your feature
+2. Make your changes
+3. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
 

@@ -14,12 +14,21 @@ const generateToken = (userId) => {
 // Register new user
 const register = async (req, res) => {
   try {
-    const { email, password, firstName, lastName, phone } = req.body;
+    const { email, password, firstName, lastName, phone, adminCode } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findByEmail(email);
     if (existingUser) {
       return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    // Determine role based on admin code
+    let role = 'member';
+    let status = 'pending';
+    
+    if (adminCode === process.env.ADMIN_REGISTRATION_CODE) {
+      role = 'admin';
+      status = 'active'; // Admins are automatically activated
     }
 
     // Create new user
@@ -29,8 +38,8 @@ const register = async (req, res) => {
       firstName,
       lastName,
       phone,
-      role: 'member', // Default role
-      status: 'pending' // Default status
+      role,
+      status
     });
 
     await user.save();
@@ -59,7 +68,9 @@ const register = async (req, res) => {
     res.status(201).json({
       token,
       user: user.getPublicProfile(),
-      message: 'Registration successful. Please wait for admin approval to access your account.'
+      message: role === 'admin' 
+        ? 'Admin registration successful. You can now log in.'
+        : 'Registration successful. Please wait for admin approval to access your account.'
     });
   } catch (error) {
     console.error('Registration error:', error);

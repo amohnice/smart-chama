@@ -1,152 +1,147 @@
 # Smart Chama Backend
 
-Backend API for Smart Chama - A Digital Chama Management System
-
-## Features
-
-- User Authentication & Authorization
-- Member Management
-- Meeting Management
-- Financial Management (Contributions & Loans)
-- Real-time Notifications
-- Email Notifications
-- File Uploads
-- Security Features
+This is the backend API for Smart Chama, built with Node.js and Express.
 
 ## Tech Stack
 
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT Authentication
-- Nodemailer
-- Multer
-- Various Security Middleware
+- Node.js with Express
+- MongoDB with Mongoose
+- JWT for authentication
+- Multer for file uploads
+- Bcrypt for password hashing
+- Nodemailer for email notifications
 
-## Prerequisites
+## Getting Started
+
+### Prerequisites
 
 - Node.js (v14 or higher)
 - MongoDB
 - npm or yarn
 
-## Installation
+### Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/smart-chama.git
-cd smart-chama/backend
-```
-
-2. Install dependencies:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Create a `.env` file in the root directory and add the following variables:
+2. Set up environment variables:
+
+Create a `.env` file in the root directory:
 ```env
-NODE_ENV=development
+# Server Configuration
 PORT=5000
-FRONTEND_URL=http://localhost:3000
+NODE_ENV=development
+
+# MongoDB Configuration
 MONGODB_URI=mongodb://localhost:27017/smart-chama
+
+# JWT Configuration
 JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRES_IN=7d
-JWT_COOKIE_EXPIRES_IN=7
-EMAIL_SERVICE=gmail
-EMAIL_USERNAME=your_email@gmail.com
-EMAIL_PASSWORD=your_email_password
-EMAIL_FROM=Smart Chama <your_email@gmail.com>
+JWT_EXPIRE=30d
+
+# Admin Registration
+ADMIN_REGISTRATION_CODE=ADMIN123456
+
+# Email Configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_specific_password
+EMAIL_FROM=your_email@gmail.com
 ```
 
-4. Start the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
 
-## API Documentation
+The API will be available at `http://localhost:5000`
+
+## Available Scripts
+
+- `npm run dev` - Start development server with nodemon
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+
+## Project Structure
+
+```
+backend/
+├── config/             # Configuration files
+├── controllers/        # Route controllers
+├── middleware/         # Custom middleware
+├── models/            # Mongoose models
+├── routes/            # API routes
+├── utils/             # Utility functions
+├── .env               # Environment variables
+├── package.json       # Dependencies and scripts
+└── server.js          # Entry point
+```
+
+## API Endpoints
 
 ### Authentication
-
-- POST `/api/auth/register` - Register a new user
-- POST `/api/auth/login` - Login user
-- POST `/api/auth/logout` - Logout user
-- GET `/api/auth/me` - Get current user
-- PATCH `/api/auth/me` - Update current user
-- POST `/api/auth/forgot-password` - Request password reset
-- POST `/api/auth/reset-password` - Reset password
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - Login user
+- `GET /api/auth/me` - Get current user profile
+- `PUT /api/auth/profile` - Update user profile
+- `PUT /api/auth/password` - Change password
 
 ### Members
+- `GET /api/members/profile` - Get member profile
+- `PUT /api/members/profile` - Update member profile
+- `GET /api/members/contributions` - Get member contributions
+- `GET /api/members/loans` - Get member loans
+- `GET /api/members/meetings` - Get member meetings
 
-- GET `/api/members` - Get all members
-- GET `/api/members/:id` - Get member by ID
-- POST `/api/members` - Create new member
-- PATCH `/api/members/:id` - Update member
-- DELETE `/api/members/:id` - Delete member
+### Admin
+- `GET /api/admin/dashboard` - Get admin dashboard
+- `GET /api/admin/members` - Get all members
+- `POST /api/admin/members` - Add new member
+- `PUT /api/admin/members/:id` - Update member
+- `DELETE /api/admin/members/:id` - Delete member
+
+### Contributions
+- `GET /api/contributions` - Get all contributions
+- `POST /api/contributions` - Add new contribution
+- `PUT /api/contributions/:id` - Update contribution
+- `DELETE /api/contributions/:id` - Delete contribution
+
+### Loans
+- `GET /api/loans` - Get all loans
+- `POST /api/loans` - Apply for loan
+- `PUT /api/loans/:id` - Update loan
+- `DELETE /api/loans/:id` - Delete loan
 
 ### Meetings
-
-- GET `/api/meetings` - Get all meetings
-- GET `/api/meetings/:id` - Get meeting by ID
-- POST `/api/meetings` - Create new meeting
-- PATCH `/api/meetings/:id` - Update meeting
-- DELETE `/api/meetings/:id` - Delete meeting
-- GET `/api/meetings/upcoming` - Get upcoming meetings
-- GET `/api/meetings/past` - Get past meetings
-
-### Finance
-
-- GET `/api/finance/transactions` - Get all transactions
-- GET `/api/finance/transactions/:id` - Get transaction by ID
-- POST `/api/finance/contributions` - Create contribution
-- POST `/api/finance/loans` - Create loan request
-- POST `/api/finance/loans/:id/approve` - Approve loan
-- POST `/api/finance/loans/:id/reject` - Reject loan
-- POST `/api/finance/loans/payments` - Record loan payment
-- GET `/api/finance/stats` - Get financial statistics
-
-### Notifications
-
-- GET `/api/notifications` - Get user notifications
-- GET `/api/notifications/unread` - Get unread count
-- PATCH `/api/notifications/:id/read` - Mark notification as read
-- PATCH `/api/notifications/read-all` - Mark all notifications as read
-- DELETE `/api/notifications/:id` - Delete notification
-
-## Security Features
-
-- JWT Authentication
-- Password Hashing
-- Rate Limiting
-- CORS Protection
-- XSS Protection
-- NoSQL Injection Protection
-- HTTP Parameter Pollution Protection
-- Security Headers
-- Input Validation
-- File Upload Validation
+- `GET /api/meetings` - Get all meetings
+- `POST /api/meetings` - Create new meeting
+- `PUT /api/meetings/:id` - Update meeting
+- `DELETE /api/meetings/:id` - Delete meeting
 
 ## Error Handling
 
-The API uses a centralized error handling mechanism with appropriate HTTP status codes and error messages.
+The API uses a centralized error handling system. All errors are returned in the following format:
 
-## Testing
-
-Run tests using:
-```bash
-npm test
-```
-
-## Linting
-
-Run linter using:
-```bash
-npm run lint
+```json
+{
+  "success": false,
+  "error": {
+    "message": "Error message",
+    "code": "ERROR_CODE"
+  }
+}
 ```
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Create a new branch for your feature
+2. Make your changes
+3. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.

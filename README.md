@@ -26,11 +26,11 @@ Smart Chama is a comprehensive web application designed to streamline group fina
 
 ### Frontend
 - React.js with Vite
-- Ant Design for UI components
+- Material-UI for UI components
 - React Router for navigation
 - Axios for API requests
-- Context API for state management
-- Tailwind CSS for styling
+- Redux Toolkit for state management
+- Formik & Yup for form handling and validation
 
 ### Backend
 - Node.js with Express
@@ -67,10 +67,34 @@ npm install
 ```
 
 3. Set up environment variables:
-```bash
-# In backend directory
-cp .env.example .env
-# Edit .env with your configuration
+
+Backend (.env):
+```env
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# MongoDB Configuration
+MONGODB_URI=mongodb://localhost:27017/smart-chama
+
+# JWT Configuration
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRE=30d
+
+# Admin Registration
+ADMIN_REGISTRATION_CODE=ADMIN123456
+
+# Email Configuration
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_email@gmail.com
+SMTP_PASS=your_app_specific_password
+EMAIL_FROM=your_email@gmail.com
+```
+
+Frontend (.env):
+```env
+VITE_API_URL=http://localhost:5000/api
 ```
 
 4. Start the development servers:
@@ -81,6 +105,16 @@ npm run dev
 # Start frontend server (from frontend directory)
 npm run dev
 ```
+
+## Creating an Admin Account
+
+To create an admin account:
+
+1. Navigate to the registration page
+2. Fill in all required fields
+3. Check the "Register as Admin" checkbox
+4. Enter the admin code (default: ADMIN123456)
+5. Submit the form
 
 ## API Documentation
 
@@ -114,4 +148,8 @@ npm run dev
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
